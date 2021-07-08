@@ -1,0 +1,55 @@
+esphome:
+  name: cat_scale_study
+  platform: ESP8266
+  board: d1_mini
+
+
+globals:
+  - id: auto_tare_difference
+    type: float
+    restore_value: yes
+    initial_value: '0'
+
+  - id: initial_zero
+    type: float
+    restore_value: yes
+    # NOTE: make sure to align this value to the one used in "calibrate_linear" below!
+    initial_value: '-1353760'
+
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+  power_save_mode: none
+  manual_ip:
+    static_ip: 192.168.1.48
+    gateway: 192.168.1.1
+    subnet: 255.255.255.255
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "Cat Scale Study Fallback Hotspot"
+    password: "4zimSoSkiMXS"
+
+captive_portal:
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+
+ota:
+
+sensor:
+  - platform: hx711
+    name: "Litterbox weight"
+    dout_pin: D3
+    clk_pin: D4
+    gain: 128
+    accuracy_decimals: 2
+    unit_of_measurement: "kg"
+    filters:
+      - calibrate_linear:
+          - -1353760 -> 0
+          - -1379443 -> 0.993
+    update_interval: 0.2s
