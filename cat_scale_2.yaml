@@ -1,5 +1,5 @@
 esphome:
-  name: cat_scale_study
+  name: cat_scale_living_room
   platform: ESP8266
   board: d1_mini
 
@@ -22,7 +22,7 @@ wifi:
   password: !secret wifi_password
   power_save_mode: none
   manual_ip:
-    static_ip: 192.168.1.213
+    static_ip: 192.168.1.212
     gateway: 192.168.1.1
     subnet: 255.255.255.255
   # Enable fallback hotspot (captive portal) in case wifi connection fails
@@ -42,7 +42,7 @@ ota:
 
 sensor:
   - platform: hx711
-    name: "Litterbox weight"
+    name: "Litterbox 2  weight"
     dout_pin: D3
     clk_pin: D4
     gain: 128
@@ -50,6 +50,6 @@ sensor:
     unit_of_measurement: "kg"
     filters:
       - calibrate_linear:
-          - -1353760 -> 0
-          - -1379443 -> 0.993
+         - 133189 -> 0
+         - 1957553 -> 78.9
     update_interval: 0.5s

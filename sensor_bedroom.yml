@@ -1,0 +1,92 @@
+esphome:
+  name: multisensor_bedroom
+  platform: ESP32
+  board: esp32cam
+
+wifi:
+  ssid: !secret wifi_ssid
+  password: !secret wifi_password
+#  manual_ip:
+#    static_ip: 192.168.1.210
+#    gateway: 192.168.1.1
+#    subnet: 255.255.255.255
+
+  # Enable fallback hotspot (captive portal) in case wifi connection fails
+  ap:
+    ssid: "Multisensor Bedroom"
+    password: "AB2vlApNMyyd"
+
+captive_portal:
+
+# Enable logging
+logger:
+
+# Enable Home Assistant API
+api:
+
+ota:
+
+esp32_camera_web_server:
+  - port: 8080
+    mode: stream
+  - port: 8081
+    mode: snapshot
+
+esp32_camera:
+  external_clock:
+    pin: GPIO0
+    frequency: 20MHz
+  i2c_pins:
+    sda: GPIO26
+    scl: GPIO27
+  data_pins: [GPIO5, GPIO18, GPIO19, GPIO21, GPIO36, GPIO39, GPIO34, GPIO35]
+  vsync_pin: GPIO25
+  href_pin: GPIO23
+  pixel_clock_pin: GPIO22
+  power_down_pin: GPIO32
+  name: bedroom
+  vertical_flip: false
+
+i2c:
+  sda: GPIO15
+  scl: GPIO13
+
+sensor:
+  - platform: ccs811
+    eco2:
+      name: "CCS811 eCO2 Value"
+    tvoc:
+      name: "CCS811 Total Volatile Organic Compound"
+    address: 0x5A
+    update_interval: 30s
+    baseline: 0x35C0
+    temperature: multisensor_bedroom_temp
+    humidity: multisensor_bedroom_humidity
+
+  - platform: htu21d
+    temperature:
+      name: "Multisensor Bedroom Temperature"
+      id: multisensor_bedroom_temp
+    humidity:
+      name: "Multisensor Bedroom Humidity"
+      id: multisensor_bedroom_humidity
+    update_interval: 60s
+
+  - platform: tcs34725
+    red_channel:
+      name: "Bedroom Red Channel"
+    green_channel:
+      name: "Bedroom Green Channel"
+    blue_channel:
+      name: "Bedroom Blue Channel"
+    clear_channel:
+      name: "Bedroom Clear Channel"
+    illuminance:
+      name: "Bedroom Illuminance"
+    color_temperature:
+      name: "Bedroom Color Temperature"
+    gain: 60x
+    address: 0x29
+    integration_time: 614ms
+    glass_attenuation_factor: 1.0
+    update_interval: 30s
